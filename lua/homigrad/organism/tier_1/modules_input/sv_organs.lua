@@ -81,6 +81,34 @@ input_list.intestines = function(org, bone, dmg, dmgInfo)
 end
 
 input_list.brain = function(org, bone, dmg, dmgInfo)
+	-- =========================================================================
+	-- LOBOTOMITE / BRAINLESS OVERRIDE
+	-- =========================================================================
+	if org.IsBrainless then
+		-- Keep neural trauma metrics at absolute zero
+		org.brain = 0
+		org.shock = 0
+		org.disorientation = 0
+		org.painadd = 0
+		
+		-- Heavily scale down structural projectile damage to the baseline health pool
+		dmgInfo:ScaleDamage(0.15) 
+		
+		-- Visual & Audio indicator: Empty/Advanced skull casing
+		local dmgPos = dmgInfo:GetDamagePosition()
+		local effdata = EffectData()
+		effdata:SetOrigin(dmgPos)
+		util.Effect("MetalSpark", effdata)
+		
+		if IsValid(org.owner) then
+			org.owner:EmitSound("physics/metal/metal_box_impact_bullet" .. math.random(1, 3) .. ".wav", 75, 115)
+		end
+		
+		-- Return 0 to prevent downstream internal arterial bleed tracking from this organ
+		return 0 
+	end
+	-- =========================================================================
+
 	if dmgInfo:IsDamageType(DMG_BLAST) then dmg = dmg / 50 end
 	local oldDmg = org.brain
 	local result = damageOrgan(org, dmg * 1, dmgInfo, "brain")
@@ -128,21 +156,6 @@ input_list.brain = function(org, bone, dmg, dmgInfo)
 	org.shock = org.shock + dmg * 3
 	org.painadd = org.painadd + dmg * 10
 	return result
-end
-
-local angZero = Angle(0, 0, 0)
-local vecZero = Vector(0, 0, 0)
-local function getlocalshit(ent, bone, dmgInfo, dir, hit)
-	if IsValid(ent) and bone then
-		local ent = IsValid(ent.FakeRagdoll) and ent.FakeRagdoll or ent
-		local bonePos, boneAng = ent:GetBonePosition(bone)
-		local dmgPos = not isbool(hit) and hit or bonePos
-		
-		local localPos, localAng = WorldToLocal(dmgPos, angZero, bonePos, boneAng)
-		local _, dir2 = WorldToLocal(vecZero, dir:Angle(), vecZero, boneAng)
-		dir2 = dir2:Forward()
-		return localPos, localAng, dir2
-	end
 end
 
 local arterySize = {
