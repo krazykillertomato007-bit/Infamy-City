@@ -291,6 +291,27 @@ hook.Add("CanListenOthers", "CantHaveShitInDetroit", function(output, input, isC
 end)
 
 input_list.skull = function(org, bone, dmg, dmgInfo, boneindex, dir, hit, ricochet)
+	-- =========================================================================
+	-- LOBOTOMITE / BRAINLESS OVERRIDE
+	-- =========================================================================
+	if org.IsBrainless then
+		-- Gently register structural skull degradation without invoking bone collapse
+		org.skull = math.min(org.skull + (dmg * 0.05), 1)
+		
+		-- Heavily minimize heavy kinetic blunt/projectile payload impact scaling
+		dmgInfo:ScaleDamage(0.2)
+		
+		-- Play alternate mechanical thud audio cues when the shell is struck
+		if IsValid(org.owner) and math.random(2) == 1 then
+			org.owner:EmitSound("physics/metal/metal_box_impact_bullet" .. math.random(1, 3) .. ".wav", 75, 105)
+		end
+		
+		-- Return 0 to short-circuit the structural fracture penalties below,
+		-- but external trace deep wounds will still bleed freely into org.wounds.
+		return 0, vecZero
+	end
+	-- =========================================================================
+
 	local oldDmg = org.skull
 	
 	local result, vecrand = damageBone(org, 0.25, dmg, dmgInfo, "skull", boneindex, dir, hit, ricochet)
