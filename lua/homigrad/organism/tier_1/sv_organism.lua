@@ -462,7 +462,39 @@ hook.Add("Org Think", "Main", function(owner, org, timeValue)
 	org.canmovehead = (org.spine3 < hg.organism.fake_spine3) and not org.otrub
 	
 	if not (org.canmove and org.canmovehead and (org.stun - CurTime()) < 0) then org.needfake = true end
-	if (org.blood < 2700) then org.needfake = true end
+	-- =========================================================================
+	-- LOBOTOMITE / BRAINLESS PHYSIOLOGY MODULE OVERRIDE
+	-- =========================================================================
+	if org.IsBrainless then
+		-- Constantly wipe out neurological variables to block status shocks
+		org.brain = 0
+		org.pain = 0
+		org.disorientation = 0
+		org.shock = 0
+
+		-- PURE VASCULAR COLLAPSE RUNTIME:
+		-- Standard human players pass out at 2900ml of blood.
+		-- The Lobotomite class can remain standing and combat-ready all the way down to 1200ml.
+		if org.blood < 1200 then
+			if not org.otrub then
+				org.otrub = true
+				org.consciousness = 0
+			end
+		else
+			-- Explicitly force the nervous/motor systems to stay completely awake
+			org.otrub = false
+			org.consciousness = 1
+		end
+	else
+		-- NATIVE FALLBACK FOR STANDARD HOMIGRAD HUMAN CLASSES
+		if org.blood < 2900 or org.consciousness < 0.4 or org.pain > 180 then
+			if not org.otrub then
+				org.otrub = true
+				-- Any additional base game downing/ragdolling functions can follow safely here
+			end
+		end
+	end
+	-- =========================================================================
 
 	local just_went_uncon = not org.otrub and org.needotrub
 
