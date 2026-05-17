@@ -1083,3 +1083,13 @@ hook.Add("HG.InputMouseApply","zzzzzzzzzzzzbrain_death",function(tbl)
 
 	return true--]]
 end)
+
+hook.Add("RenderScreenspaceEffects", "LobotomiteSensoryOverride", function()
+    local lply = LocalPlayer()
+    if IsValid(lply) and lply:Alive() and lply:GetNWBool("IsBrainless", false) then
+        -- Returning true inside this specific screen render space hook allows your 
+        -- Lobotomite class to completely bypass low-blood gray scales, blurred views, 
+        -- and tunnel vignettes—giving them crisp vision up to the moment they drop.
+        return true
+    end
+end)
