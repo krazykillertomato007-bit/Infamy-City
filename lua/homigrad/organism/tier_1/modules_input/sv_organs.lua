@@ -80,6 +80,20 @@ input_list.intestines = function(org, bone, dmg, dmgInfo)
 	return result
 end
 
+local angZero = Angle(0, 0, 0)
+local vecZero = Vector(0, 0, 0)
+local function getlocalshit(ent, bone, dmgInfo, dir, hit)
+    if IsValid(ent) and bone then
+        local ent = IsValid(ent.FakeRagdoll) and ent.FakeRagdoll or ent
+        local bonePos, boneAng = ent:GetBonePosition(bone)
+        local dmgPos = not isbool(hit) and hit or bonePos
+        local localPos, localAng = WorldToLocal(dmgPos, angZero, bonePos, boneAng)
+        local _, dir2 = WorldToLocal(vecZero, dir:Angle(), vecZero, boneAng)
+        dir2 = dir2:Forward()
+        return localPos, localAng, dir2
+    end
+end
+
 input_list.brain = function(org, bone, dmg, dmgInfo)
 	-- =========================================================================
 	-- LOBOTOMITE / BRAINLESS OVERRIDE
@@ -156,20 +170,6 @@ input_list.brain = function(org, bone, dmg, dmgInfo)
 	org.shock = org.shock + dmg * 3
 	org.painadd = org.painadd + dmg * 10
 	return result
-	local angZero = Angle(0, 0, 0)
-local vecZero = Vector(0, 0, 0)
-local function getlocalshit(ent, bone, dmgInfo, dir, hit)
-    if IsValid(ent) and bone then
-        local ent = IsValid(ent.FakeRagdoll) and ent.FakeRagdoll or ent
-        local bonePos, boneAng = ent:GetBonePosition(bone)
-        local dmgPos = not isbool(hit) and hit or bonePos
-
-        local localPos, localAng = WorldToLocal(dmgPos, angZero, bonePos, boneAng)
-        local _, dir2 = WorldToLocal(vecZero, dir:Angle(), vecZero, boneAng)
-        dir2 = dir2:Forward()
-        return localPos, localAng, dir2
-    end
-end
 end
 
 local arterySize = {
