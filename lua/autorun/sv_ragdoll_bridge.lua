@@ -1,5 +1,6 @@
 -- Bridge Zippy's Active Ragdoll system with Z-City's damage hook
-hook.Add("PostEntityTakeDamage", "ZippyRagdoll_ZCityBridge", function(ent, dmginfo, took)
+-- THIS IS FUCKING BROKEN DONT USE
+--[[ hook.Add("PostEntityTakeDamage", "ZippyRagdoll_ZCityBridge", function(ent, dmginfo, took)
     if not IsValid(ent) then return end
     if not ent:IsNPC() then return end
     if not took then return end
@@ -23,3 +24,4 @@ hook.Add("PostEntityTakeDamage", "ZippyRagdoll_ZCityBridge", function(ent, dmgin
     local forceRagdoll = false
     if alwaysExplode and alwaysExplode:GetBool() and bit.band(dmgType, DMG_BLAST) ~= 0 then forceRagdoll = true end
     if alway
+]] 
