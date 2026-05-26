@@ -1,0 +1,14 @@
+{
+    "title": "Infamy City",
+    "type": "gamemode",
+    "tags": ["roleplay", "realism"],
+    "ignore": [
+        ".github",
+        "*.md",
+        "LICENSE",
+        ".gitignore",
+        "lua/bin/*.dll",
+        "lua/*.txt",
+        "lua/weapons/homigrad_base/*.txt"
+    ]
+}
