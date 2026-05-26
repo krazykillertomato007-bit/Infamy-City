@@ -210,10 +210,18 @@ function MODE:GiveEquipment()
     end)
 
     for _, ply in player.Iterator() do
-        if not ply:Alive() or ply:Team() == TEAM_SPECTATOR then
-            continue
+        if ply:Team() == TEAM_SPECTATOR then continue end
+
+        -- IF THE PLAYER IS ALIVE: Do not teleport or re-spec them!
+        if ply:Alive() then
+            -- Optional: Just top up their health and ammo instead of respawning them
+            ply:SetHealth(ply:GetMaxHealth())
+            continue 
         end
-        
+
+        -- IF THE PLAYER IS DEAD: Safely respawn them into the wave
+        ply:Spawn() -- Forces native GMod spawn, resetting their alive status
+
         ply:SetSuppressPickupNotices(true)
         ply.noSound = true
 
@@ -222,6 +230,7 @@ function MODE:GiveEquipment()
             zb.GiveRole(ply, "Refugee", Color(255, 150, 0))
         end)
 
+        -- Teleport the newly respawned player to a defensive spawn point
         self:GetPlySpawn(ply)
 
         timer.Simple(0.1, function()
@@ -237,7 +246,6 @@ function MODE:GiveEquipment()
         ply.noSound = false
     end
 end
-
 
 function SetCommanderRoleByID(playerID)
     local ply = Player(playerID)
