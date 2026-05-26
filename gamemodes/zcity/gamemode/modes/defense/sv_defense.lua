@@ -676,5 +676,66 @@ net.Receive("defense_change_vote", function(len, ply)
     end
 end)
 
+-- Automate player respawning between waves/rounds
+hook.Add("Think", "ZCity_Defense_AutoRespawnHandler", function()
+    local MODE = CurrentRound and CurrentRound()
+    if not MODE or MODE.name ~= "defense" then return end
 
+    -- Check if we are currently in the preparation/intermission phase before a wave starts
+    -- (Adjust 'MODE.WaveCompleted' or your local state logic if your framework uses a different variable)
+    if MODE.WaveCompleted and not MODE:IsWaveActive() then
+        if not MODE.NextWave_RespawnedDone then
+            MODE.NextWave_RespawnedDone = true -- Guard statement to run this once per intermission
+            
+            print("[DEFENSE AUTOMATION] Wave completed! Respawning all dead and spectating players...")
+
+            for _, ply in player.Iterator() do
+                if not IsValid(ply) then continue end
+
+                -- Check if they are dead, spectating, or stuck without a proper organism
+                local isSpectator = (ply:Team() == TEAM_SPECTATOR)
+                local isDead = not ply:Alive()
+
+                if isDead or isSpectator then
+                    -- 1. Reset their team back to active if they were pushed to spectators
+                    if isSpectator and TEAM_REBEL then -- Adjust TEAM_REBEL to your active human team macro if different
+                        ply:SetTeam(TEAM_REBEL) 
+                    end
+
+                    -- 2. Trigger the engine respawn lifecycle safely
+                    ply:Spawn()
+
+                    -- 3. Clear out their ZCity medical organism data so they don't spawn breaking bones/suffocating
+                    if ply.organism then
+                        -- Reinitialize their base values back to healthy defaults
+                        ply.organism.alive = true
+                        ply.organism.otrub = false
+                        if ply.organism.stamina then ply.organism.stamina[1] = ply.organism.stamina.range end
+                        if ply.organism.o2 then ply.organism.o2[1] = ply.organism.o2.range end
+                        ply.organism.brain = 0
+                        ply.organism.pain = 0
+                        ply.organism.shock = 0
+                        ply.organism.blood = 5000 -- Max baseline blood
+                    end
+
+                    ply:ChatPrint("[ZCity] You have been automatically respawned for the next wave!")
+                end
+            end
+
+            -- Automatically re-run your equipment assigner code to give the freshly spawned players their gear
+            if MODE.GiveEquipment then
+                timer.Simple(0.5, function()
+                    if not MODE:IsWaveActive() then
+                        MODE:GiveEquipment()
+                    end
+                end)
+            end
+        end
+    else
+        -- Reset our guard statement when the wave becomes active again so it's ready for the next interval
+        if MODE:IsWaveActive() then
+            MODE.NextWave_RespawnedDone = false
+        end
+    end
+end)
 
