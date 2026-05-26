@@ -3,7 +3,7 @@
 --  Place in: garrysmod/addons/zcity_custom/lua/autorun/server/
 -- ============================================================
 
-hook.Add("PostGamemodeLoaded", "LobotomiteAndLoot_Register", function()
+--[[ hook.Add("PostGamemodeLoaded", "LobotomiteAndLoot_Register", function()
     local mode = zb and zb.modes and zb.modes["hmcd"]
     if not mode then
         print("[InfamyCity] ERROR: hmcd mode not found.")
@@ -262,3 +262,4 @@ hook.Add("PostGamemodeLoaded", "LobotomiteAndLoot_Register", function()
 
     print("[InfamyCity] Loot table injections applied.")
 end)
+]]
