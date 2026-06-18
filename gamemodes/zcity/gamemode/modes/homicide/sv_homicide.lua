@@ -406,7 +406,7 @@ MODE.Types.wildwest = {
 				v:Give("weapon_handcuffs_key")
 			else
 				local guns = {
-					"weapon_winchester",
+					"weapon_win1892",
 					"weapon_revolver2",
 					"weapon_doublebarrel",
 					"weapon_doublebarrel_short"
