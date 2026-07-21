@@ -698,9 +698,9 @@ hook.Add("Think", "ZCity_Defense_AutoRespawnHandler", function()
 
                 if isDead or isSpectator then
                     -- 1. Reset their team back to active if they were pushed to spectators
-                    if isSpectator and TEAM_REBEL then -- Adjust TEAM_REBEL to your active human team macro if different
-                        ply:SetTeam(TEAM_REBEL) 
-                    end
+					if isSpectator then
+ 					   ply:SetTeam(zb:BalancedChoice(0, 1))
+					end
 
                     -- 2. Trigger the engine respawn lifecycle safely
                     ply:Spawn()
