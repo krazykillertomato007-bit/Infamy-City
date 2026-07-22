@@ -34,4 +34,3 @@ hook.Add("PostGamemodeLoaded", "WardrobeBridge_Init", function()
 end) --]]
 
 print("yay. so garbage!")
-end
