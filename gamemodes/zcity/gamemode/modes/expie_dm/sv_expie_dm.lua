@@ -6,7 +6,7 @@ MODE.LootSpawn   = true   -- re-use the map's existing loot containers
 MODE.GuiltDisabled = true
 MODE.randomSpawns  = true
 MODE.ForBigMaps    = false
-MODE.Chance        = 0.04
+MODE.Chance        = 0.00 -- Doesnt work so well
 
 util.AddNetworkString("expie_dm_start")
 util.AddNetworkString("expie_dm_end")
