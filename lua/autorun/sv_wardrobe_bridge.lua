@@ -2,6 +2,7 @@
 --  Wardrobe (Sappy Edition) + Z-City VIP Bridge
 --  lua/autorun/server/sv_wardrobe_bridge.lua
 -- ============================================================
+--[[ Will come back to this, IG
 
 if CLIENT then return end
 
@@ -30,4 +31,7 @@ hook.Add("PostGamemodeLoaded", "WardrobeBridge_Init", function()
     end)
 
     print("[WardrobeBridge] Wardrobe Sappy Edition VIP gate active.")
-end)
+end) --]]
+
+print("yay. so garbage!")
+end
