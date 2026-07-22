@@ -81,10 +81,8 @@ function MODE:RoundStart()
     for _, ply in player.Iterator() do
         if not ply:Alive() then continue end
 
-        -- Force expie playerclass
-        if hg and hg.SetPlayerClass then
-            hg.SetPlayerClass(ply, "expie", {instant = true})
-        end
+		-- Force expie playerclass
+		ply:SetPlayerClass("expie", { instant = true })
 
         ply:SetSuppressPickupNotices(true)
         ply.noSound = true
