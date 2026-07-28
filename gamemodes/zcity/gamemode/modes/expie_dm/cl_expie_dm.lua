@@ -10,8 +10,8 @@ local sw, sh      = ScrW, ScrH
 
 -- ─── Local Soundtrack Files ──────────────────────────────────────────────────
 local snds = {
-    "expie_dm/ProxyOST-CU.mp3",
-    "expie_dm/ChaseItDownOST-CU.mp3"
+    "sound/expie_dm/ProxyOST-CU.mp3",
+    "sound/expie_dm/ChaseItDownOST-CU.mp3"
 }
 
 if SERVER then
